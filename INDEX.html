@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Nugget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F4F1; --card:#FFFFFF; --ink:#16201A; --ink2:#4B5650; --muted:#8A938D; --line:#E6E9E5; --grid:#EEF0ED;
+  --run:#1E6B41; --pdt:#A8D8B9; --updt:#DE8B1F; --trial:#9AA3AE; --off:#D3D7DB; --oA:#1E6B41; --oP:#3A73C4; --oQ:#B5762A; --oO:#16201A; --loss:#E9A45A; --lossQ:#C9772B;
+  --pill:#163A26; --pillInk:#FFFFFF; --lineStroke:#FFFFFF; --lineEdge:#1C2A22;
+  --chip:#E4F3EA; --chipInk:#1E6B41; --warnBg:#FFF5E8; --warnInk:#8A4B00; --warnLine:#F2D3A8;
+  --sel:#16201A; --hover:rgba(22,32,26,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1411; --card:#171E1A; --ink:#E8EEEA; --ink2:#B5C0BA; --muted:#7D8882; --line:#28312C; --grid:#222A25;
+    --run:#3E9B66; --pdt:#5F8C72; --updt:#E39A3B; --trial:#6B747D; --off:#4A5157; --oA:#3E9B66; --oP:#5B92E0; --oQ:#C08537; --oO:#E8EEEA; --loss:#B87A35; --lossQ:#D08A3E;
+    --pill:#E8EEEA; --pillInk:#10251A; --lineStroke:#E8EEEA; --lineEdge:#0F1411;
+    --chip:#1F3A2B; --chipInk:#9FD9B5; --warnBg:#2B2214; --warnInk:#F2C27D; --warnLine:#4A3A20;
+    --sel:#E8EEEA; --hover:rgba(255,255,255,.05);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1411; --card:#171E1A; --ink:#E8EEEA; --ink2:#B5C0BA; --muted:#7D8882; --line:#28312C; --grid:#222A25;
+  --run:#3E9B66; --pdt:#5F8C72; --updt:#E39A3B; --trial:#6B747D; --off:#4A5157; --oA:#3E9B66; --oP:#5B92E0; --oQ:#C08537; --oO:#E8EEEA; --loss:#B87A35; --lossQ:#D08A3E;
+  --pill:#E8EEEA; --pillInk:#10251A; --lineStroke:#E8EEEA; --lineEdge:#0F1411;
+  --chip:#1F3A2B; --chipInk:#9FD9B5; --warnBg:#2B2214; --warnInk:#F2C27D; --warnLine:#4A3A20;
+  --sel:#E8EEEA; --hover:rgba(255,255,255,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 16px 40px}
+header.top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;background:#163A26;color:#fff;border-radius:18px;padding:14px 18px;box-shadow:0 8px 24px rgba(20,30,25,.12)}
+header.top .brand{font-size:20px;letter-spacing:.02em}
+header.top nav.pages{background:rgba(255,255,255,.1);border-color:transparent}
+header.top nav.pages button{color:rgba(255,255,255,.8)}
+header.top nav.pages button.on{background:#fff;color:#163A26}
+header.top .meta{color:rgba(255,255,255,.75)}
+header.top .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+header.top .btn:hover{background:rgba(255,255,255,.12)}
+.brand{font-weight:800;font-size:18px;letter-spacing:-.01em}
+.brand small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+nav.pages{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+nav.pages button{border:0;background:transparent;color:var(--ink2);font:600 13px inherit;font-family:inherit;padding:7px 16px;border-radius:999px;cursor:pointer}
+nav.pages button.on{background:var(--ink);color:var(--card)}
+nav.pages button:disabled{opacity:.45;cursor:not-allowed}
+.spacer{flex:1}
+.meta{font-size:12px;color:var(--muted);text-align:right}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 13px inherit;font-family:inherit;padding:7px 14px;border-radius:10px;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.card{background:var(--card);border-radius:20px;padding:22px 24px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 8px 24px rgba(20,30,25,.05);margin-bottom:16px}
+.card h2{margin:0;font-size:26px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:12px}
+.badge{font-size:13px;font-weight:700;background:var(--chip);color:var(--chipInk);padding:4px 12px;border-radius:999px;letter-spacing:0}
+.card h3{margin:0 0 4px;font-size:18px;font-weight:800;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:12.5px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+.seg{display:inline-flex;background:var(--bg);border-radius:12px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--ink2);font:600 13px inherit;font-family:inherit;padding:6px 12px;border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin:14px 0 6px}
+.kpi{border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:13px;font-weight:600;color:var(--ink2);margin-left:2px}
+.kpi .d{font-size:11.5px;color:var(--ink2)}
+.kpi.hero .v{font-size:30px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chartBox{position:relative;margin-top:10px}
+svg text{font-family:inherit}
+.legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13.5px;color:var(--ink2);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:18px;height:18px;border-radius:5px;display:inline-block}
+.legend i.ln{width:34px;height:10px;border-radius:6px;border:2.5px solid var(--lineEdge);background:var(--lineStroke)}
+.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:200px;z-index:5;display:none}
+.tip b{display:block;font-size:13px;margin-bottom:4px}
+.tip .r{display:flex;justify-content:space-between;gap:14px;font-variant-numeric:tabular-nums}
+.tip .r span:first-child{color:var(--ink2)}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+.pareto .row{display:grid;grid-template-columns:minmax(0,1fr) 140px 56px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--grid);font-size:13px}
+.pareto .row:last-child{border-bottom:0}
+.pareto .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pareto .nm small{display:block;color:var(--muted);font-size:11.5px}
+.pareto .bar{height:10px;border-radius:0 4px 4px 0;background:var(--updt)}
+.pareto .bar.p{background:var(--pdt)}
+.pareto .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:right;font-weight:700;padding:8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 8px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+th.l,td.l{text-align:left}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--hover)}
+tbody tr.sel{background:var(--chip)}
+tfoot td{font-weight:800;border-top:1px solid var(--line);border-bottom:0}
+.tblWrap{overflow-x:auto}
+.cat{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+.cat.UPDT{background:#FBE7CC;color:#7A4300}.cat.PDT{background:#DDF1E4;color:#1E6B41}.cat.TRIAL{background:#E7EAED;color:#4A525A}.cat.OFF{background:#EEE;color:#555}
+.warn{background:var(--warnBg);border:1px solid var(--warnLine);color:var(--warnInk);border-radius:14px;padding:12px 16px;font-size:13px}
+.warn ul{margin:6px 0 0;padding-left:18px}.warn li{margin:3px 0}
+.warn b{color:inherit}
+.empty{padding:48px 0;text-align:center;color:var(--muted)}
+.selNote{font-size:12.5px;color:var(--ink2);margin-left:auto}
+.selNote a{color:var(--chipInk);font-weight:700;cursor:pointer;text-decoration:underline}
+.log{max-height:420px;overflow:auto}
+.log td.desc{white-space:normal;min-width:240px;color:var(--ink2);text-align:left}
+.loading{display:flex;align-items:center;gap:10px;color:var(--muted);padding:40px 0;justify-content:center}
+.err{color:#B3261E;font-weight:600}
+.defs{font-size:12px;color:var(--muted);margin-top:10px}
+.cardHead{display:flex;align-items:center;gap:12px}
+.cardHead .spacer{flex:1}
+.dl{border:1px solid var(--line);background:var(--card);color:var(--ink2);font:600 12.5px inherit;font-family:inherit;padding:6px 12px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.dl:hover{background:var(--hover);color:var(--ink)}
+.dl[disabled]{opacity:.5;cursor:wait}
+.range{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border-radius:12px;padding:3px 6px 3px 10px;font-size:12.5px;color:var(--ink2);font-weight:600}
+.range select{border:0;background:var(--card);color:var(--ink);font:600 13px inherit;font-family:inherit;padding:5px 8px;border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:pointer}
+.range .x{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 4px}
+.ctl-input{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border-radius:12px;padding:3px 10px;font-size:12.5px;color:var(--ink2);font-weight:600}
+.ctl-input.cap{flex-wrap:wrap;row-gap:4px;padding:5px 10px}
+.ctl-input.cap label{display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.ctl-input.cap input{width:66px}
+.ctl-input .ro{background:var(--chip);color:var(--chipInk);border-radius:9px;padding:5px 9px;font-weight:800;white-space:nowrap}
+.ctl-input .ro small{font-weight:600;opacity:.8}
+.ctl-input input{width:62px;border:0;background:var(--card);color:var(--ink);font:700 13px inherit;font-family:inherit;padding:5px 6px;border-radius:9px;text-align:right;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+body.exporting .dl, body.exporting .tip, body.exporting .noexp{display:none!important}
+.filterbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--card);border-radius:16px;padding:10px 12px;margin-bottom:16px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 8px 24px rgba(20,30,25,.05)}
+.filterbar .lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-right:2px}
+.page[hidden]{display:none!important}
+.wf .row{display:grid;grid-template-columns:220px minmax(0,1fr) 120px;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid var(--grid);font-size:13px}
+.wf .row:last-child{border-bottom:0}
+.wf .track{position:relative;height:22px}
+.wf .seg2{position:absolute;top:0;height:22px;border-radius:5px}
+.wf .nm small{display:block;color:var(--muted);font-size:11.5px}
+.wf .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.wf .val small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.wf .row.tot .nm{font-weight:800}
+@media (max-width:640px){.wf .row{grid-template-columns:120px minmax(0,1fr) 84px;gap:8px}}
+.seg.multi button.on::before{content:"✓ ";font-weight:800}
+.seg.multi button[data-c="ALL"].on::before{content:""}
+.expTag{display:none;font-size:12.5px;color:var(--ink2);font-weight:600;margin-top:2px}
+body.exporting .expTag{display:block}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}
+@media (max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:18px 16px}.card h2{font-size:22px}.meta{text-align:left}}
+#gate{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#163A26;padding:16px}
+body.locked #gate{display:flex}
+body.locked .wrap{display:none}
+.gateBox{background:var(--card);border-radius:20px;padding:32px 28px;width:100%;max-width:360px;box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:12px}
+.gateTitle{font-weight:800;font-size:22px;letter-spacing:.02em;color:var(--ink)}
+.gateSub{font-size:13px;color:var(--muted);margin-top:-6px}
+.gateBox input{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 15px inherit;font-family:inherit;padding:11px 14px;border-radius:12px;outline:none}
+.gateBox input:focus{border-color:#1E6B41;box-shadow:0 0 0 3px rgba(30,107,65,.15)}
+.gateBox button{border:0;background:#163A26;color:#fff;font:700 14px inherit;font-family:inherit;padding:11px 14px;border-radius:12px;cursor:pointer}
+.gateBox button:hover{background:#1E6B41}
+.gateErr{min-height:16px;font-size:12.5px;color:#B3261E;font-weight:600}
+.gateBox.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+</style>
+</head>
+<body class="locked">
+<div id="gate">
+  <form class="gateBox" id="gateForm" autocomplete="off">
+    <div class="gateTitle">DASHBOARD NUGGET</div>
+    <div class="gateSub">Masukkan password untuk membuka dashboard</div>
+    <input id="gatePw" type="password" placeholder="Password" aria-label="Password" autofocus>
+    <div class="gateErr" id="gateErr"></div>
+    <button type="submit">Masuk</button>
+  </form>
+</div>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">DASHBOARD NUGGET</div>
+    <nav class="pages">
+      <button class="on" data-page="uptime">Uptime</button>
+      <button data-page="oee">OEE</button>
+    </nav>
+    <div class="spacer"></div>
+    <div class="meta"><span id="loadedAt">Memuat data…</span><br><a id="srcLink" target="_blank" rel="noopener" style="color:inherit">Buka Google Sheet</a></div>
+    <button class="btn" id="refresh">↻ Muat ulang</button>
+  </header>
+
+  <div class="filterbar">
+    <span class="lbl">Filter</span>
+    <div class="seg multi cycSel" id="cycleSeg"></div>
+    <div class="range" id="okpRange">OKP <select id="okpFrom" aria-label="OKP dari"></select> s/d <select id="okpTo" aria-label="OKP sampai"></select><button class="x" id="okpReset" title="Reset rentang OKP">✕</button></div>
+    <div class="ctl-input cap" title="Kapasitas teoritis line nugget">Kapasitas:
+      <label>Cavity <input id="capCavity" type="number" min="1" step="1"> pcs</label> ×
+      <label>Cycle <input id="capCycle" type="number" min="1" step="1"> /mnt</label> ×
+      <label>Forming <input id="capForming" type="number" min="0.01" step="0.01"> g</label> ×
+      <label>(1 + Pickup <input id="capPickup" type="number" min="0" step="0.01"> %)</label> ×
+      <label>Yield <input id="capYield" type="number" min="1" max="100" step="0.1"> %</label>
+      = <span class="ro" id="capOut"></span>
+    </div>
+  </div>
+
+  <section id="page-uptime" class="page">
+    <div class="card" id="mainCard">
+      <div class="cardHead"><h2>RECAP UPTIME <span class="badge">Availability</span></h2><div class="spacer"></div><button class="dl" data-png="mainCard" data-name="Uptime">⤓ Download PNG</button></div>
+      <div class="controls">
+        <div class="seg" id="viewSeg">
+          <button data-v="po" class="on">Per PO / OKP</button>
+          <button data-v="cycle">Per Cycle</button>
+          <button data-v="day">Per Hari</button>
+        </div>
+        <div class="selNote" id="selNote"></div>
+      </div>
+      <div class="expTag scopeTag"></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="chartBox" id="chartBox"><div class="loading">Memuat data dari Google Sheet…</div></div>
+      <div class="legend" id="legend"></div>
+      <div class="defs">Production Hours = kolom Lama Produksi (jam) per OKP di tab START-STOP. Uptime (jam) = Production Hours − Planned DT − Unplanned DT − Trial − OFF yang terjadi di antara Jam Mulai–Jam Akhir OKP itu. Uptime % = Uptime (jam) ÷ Production Hours. Output teoritis = kapasitas teoritis (kg/jam) × Uptime (jam); Performa = Total output (1st TECO + 2nd + Sample + Total Waste DATA ABI &amp; RIAN) ÷ Output teoritis — sama dengan halaman OEE. Planned/Unplanned DT, Trial, dan OFF = kolom "in hours" di tab DOWNTIME (Time Category PDT / UPDT / TRIAL / OFF). Output 1st = kolom QTY STHP KG (kolom O) di tab TECO.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card" id="paretoCard">
+        <div class="cardHead"><h3>Penyebab Unplanned Downtime</h3><div class="spacer"></div><button class="dl" data-png="paretoCard" data-name="Penyebab_UPDT">⤓ PNG</button></div>
+        <div class="sub" id="paretoSub"></div>
+        <div class="pareto" id="pareto" style="margin-top:10px"></div>
+      </div>
+      <div class="card" id="catCard">
+        <div class="cardHead"><h3>Komposisi Downtime</h3><div class="spacer"></div><button class="dl" data-png="catCard" data-name="Komposisi_DT">⤓ PNG</button></div>
+        <div class="sub">Jam per Activity Category &amp; mesin</div>
+        <div class="pareto" id="catBox" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div class="card" id="tblCard">
+      <div class="cardHead"><h3 id="tblTitle">Ringkasan per PO / OKP</h3><div class="spacer"></div><div class="seg multi cycSel noexp"></div><button class="dl" data-png="tblCard" data-name="Ringkasan_PO">⤓ Download PNG</button></div>
+      <div class="sub noexp">Klik baris untuk melihat detail PO di grafik dan log downtime · pilih satu atau beberapa cycle</div>
+      <div class="expTag" id="tblScope"></div>
+      <div class="tblWrap" style="margin-top:8px"><table id="poTbl"></table></div>
+    </div>
+
+    <div class="card">
+      <h3>Log Downtime</h3>
+      <div class="sub" id="logSub"></div>
+      <div class="tblWrap log" style="margin-top:8px"><table id="logTbl"></table></div>
+    </div>
+
+
+  </section>
+
+<section id="page-oee" class="page" hidden>
+  <div class="card" id="oeeCard">
+    <div class="cardHead"><h2>OEE <span class="badge">Availability × Performance × Quality</span></h2><div class="spacer"></div><button class="dl" data-png="oeeCard" data-name="OEE">⤓ Download PNG</button></div>
+    <div class="controls">
+      <div class="seg" id="oeeViewSeg">
+        <button data-v="po" class="on">Per PO / OKP</button>
+        <button data-v="cycle">Per Cycle</button>
+      </div>
+      <div class="seg" id="availSeg" title="Dasar perhitungan Availability">
+        <button data-b="std" class="on">Availability standar</button>
+        <button data-b="tot">Availability = Uptime</button>
+      </div>
+      <div class="ctl-input" title="Garis target OEE (kosongkan untuk sembunyikan)">Target OEE <input id="oeeTarget" type="number" min="0" max="100" step="1" placeholder="–"> %</div>
+      <div class="selNote" id="oeeSelNote"></div>
+    </div>
+    <div class="expTag scopeTag"></div>
+    <div class="kpis" id="oeeKpis"></div>
+    <div class="chartBox" id="oeeChart"></div>
+    <div class="legend" id="oeeLegend"></div>
+  </div>
+
+  <div class="card" id="lossCard">
+    <div class="cardHead"><h3>Ke mana waktunya hilang?</h3><div class="spacer"></div><button class="dl" data-png="lossCard" data-name="OEE_Loss">⤓ PNG</button></div>
+    <div class="sub" id="lossSub"></div>
+    <div class="wf" id="lossBox" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card" id="oeeTblCard">
+    <div class="cardHead"><h3>Ringkasan OEE per PO / OKP</h3><div class="spacer"></div><div class="seg multi cycSel noexp"></div><button class="dl" data-png="oeeTblCard" data-name="OEE_Ringkasan">⤓ Download PNG</button></div>
+    <div class="sub noexp">Klik baris untuk memilih PO · pilih satu atau beberapa cycle</div>
+    <div class="expTag scopeTag"></div>
+    <div class="tblWrap" style="margin-top:8px"><table id="oeeTbl"></table></div>
+  </div>
+</section>
+</div>
+
+<script>
+/* ============ KONFIGURASI ============ */
+const CFG = {
+  // kapasitas teoritis line (bisa diedit di dashboard): cavity × cycle/menit × berat forming × (1+pickup)
+  cap: { cavity:10, cycle:25, forming:14.45, pickup:36.15, yield:71 },
+  sheetId: '1Trc9IJGQGj36Zs0RpHFh0eh21fEY9MJ_6Nk8FzXKPzo',
+  tabs: {
+    ss: { name:'START-STOP', gid:544413634, headers:2,
+      cols:{ cycle:/(^|\s)cycle$/i, po:/\bno\.?\s*po\b/i, product:/nama produk/i, okp:/\bokp$/i, lot:/\blot$/i,
+             start:/jam mulai|\bstart$/i, stop:/jam akhir|\bstop$/i, dur:/lama produksi|durasi/i },
+      req:['okp','start','stop'] },
+    dt: { name:'DOWNTIME', gid:162833738, headers:4,
+      cols:{ date:/\bdate$|tanggal/i, okp:/\bokp$|\bno\.?\s*po\b/i, shift:/\bshift$/i, pic:/\bpic$/i, start:/\bstart$/i, stop:/\bstop$/i,
+             hours:/in hours/i, mins:/in minutes/i, machine:/machine|mesin/i, act:/activity desc/i, cat:/activity cat/i,
+             tcat:/time cat/i, code:/act code/i, ket:/keterangan/i },
+      req:['date','tcat'] },
+    ab: { name:'DATA ABI & RIAN', gid:0, headers:4,
+      cols:{ cycle:/\bcycle$/i, po:/\bno\.?\s*po\b/i, lot:/\blot$/i, okp:/\bokp$/i, kg1:/1st\s*\(kg\)/i, ctn1:/1st\s*\(ctn\)/i, kg2:/(^|\s)2nd\b/i, smp:/(^|\s)sample$/i, waste:/total waste/i },
+      req:['po','kg1'] },
+    teco: { name:'TECO', gid:1362889024, headers:4,
+      cols:{ po:/\bno\.?\s*po\b/i, produk:/(^|\s)produk$/i, kg:/(^|\s)kg$/i },   // kolom O = QTY STHP (KG)
+      req:['po','kg'] }
+  }
+};
+
+/* ============ UTIL ============ */
+const $ = s => document.querySelector(s);
+const NF1 = new Intl.NumberFormat('id-ID',{minimumFractionDigits:1,maximumFractionDigits:1});
+const NF0 = new Intl.NumberFormat('id-ID',{maximumFractionDigits:0});
+const NF2 = new Intl.NumberFormat('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fh = h => NF1.format(h);
+const fp = x => isFinite(x) ? NF0.format(x*100)+'%' : '–';
+const fp1 = x => isFinite(x) ? NF1.format(x*100)+'%' : '–';
+const ft = kg => NF1.format(kg/1000)+'t';
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DOW = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const MON = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const pad = n => String(n).padStart(2,'0');
+
+function gvArgs(v){ const m = /^Date\(([^)]*)\)$/.exec(v); return m ? m[1].split(',').map(Number) : null; }
+function toDate(v){
+  if (v==null || v==='') return null;
+  if (typeof v==='string'){
+    const a = gvArgs(v); if (a) return new Date(a[0],a[1],a[2]||1);
+    const m = /^(\d{1,2})[-\/ ]([A-Za-z]{3})[A-Za-z]*[-\/ ]?(\d{2,4})?$/.exec(v.trim());
+    if (m){ const mi=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(m[2].toLowerCase());
+      const mi2 = mi<0 ? ['jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des'].indexOf(m[2].toLowerCase()) : mi;
+      if (mi2>=0){ let y = m[3] ? +m[3] : new Date().getFullYear(); if (y<100) y+=2000; return new Date(y,mi2,+m[1]); } }
+    const d = new Date(v); return isNaN(d) ? null : new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  }
+  if (v instanceof Date) return new Date(v.getFullYear(),v.getMonth(),v.getDate());
+  return null;
+}
+const dkey = d => d ? d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()) : '';
+const dlab = d => d ? d.getDate()+' '+MON[d.getMonth()] : '–';
+function durHours(v){
+  if (v==null || v==='') return 0;
+  if (typeof v==='number') return v;
+  const a = gvArgs(v);
+  if (a){ const t = Date.UTC(a[0],a[1],a[2],a[3]||0,a[4]||0,a[5]||0) - Date.UTC(1899,11,30); return t/36e5; }
+  const m = /^(\d+):(\d{1,2})(?::(\d{1,2}))?$/.exec(String(v).trim());
+  if (m) return +m[1] + (+m[2])/60 + (+(m[3]||0))/3600;
+  const n = parseFloat(String(v).replace(',','.')); return isNaN(n)?0:n;
+}
+function hhmm(v){
+  if (v==null || v==='') return '';
+  const a = gvArgs(String(v)); if (a) return pad(a[3]||0)+':'+pad(a[4]||0);
+  const m = /^(\d{1,2}):(\d{2})/.exec(String(v)); return m ? pad(m[1])+':'+m[2] : String(v);
+}
+const poShort = po => po ? String(po).slice(-4) : '–';
+
+/* ============ LOAD (gviz JSONP – jalan dari file lokal) ============ */
+let cbSeq = 0;
+function gviz(gid, headers){
+  return new Promise((resolve,reject)=>{
+    const cb = '__gv'+(++cbSeq)+'_'+Date.now();
+    const s = document.createElement('script');
+    const t = setTimeout(()=>{cleanup();reject(new Error('Timeout membaca gid '+gid));}, 20000);
+    function cleanup(){ clearTimeout(t); delete window[cb]; s.remove(); }
+    window[cb] = res => { cleanup(); res && res.status==='error' ? reject(new Error((res.errors||[]).map(e=>e.detailed_message||e.message).join('; ')||'gviz error')) : resolve(res); };
+    s.onerror = () => { cleanup(); reject(new Error('Gagal memuat sheet (cek akses "Anyone with the link")')); };
+    s.src = `https://docs.google.com/spreadsheets/d/${CFG.sheetId}/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=${headers}&gid=${gid}&_=${Date.now()}`;
+    document.head.appendChild(s);
+  });
+}
+function mapCols(table, spec){
+  const labels = table.cols.map(c => (c.label||'').replace(/\s+/g,' ').trim());
+  const idx = {};
+  for (const [k,re] of Object.entries(spec)) idx[k] = labels.findIndex(l => l && re.test(l));
+  return {idx, labels};
+}
+async function loadTab(key){
+  const T = CFG.tabs[key];
+  const tries = [T.headers, ...[1,2,3,4,5,6,7,8].filter(h=>h!==T.headers)];
+  let last;
+  for (const h of tries){
+    const res = await gviz(T.gid, h);
+    const {idx, labels} = mapCols(res.table, T.cols);
+    if (T.req.every(k => idx[k] >= 0)){
+      const rows = res.table.rows.map(r => (r.c||[]).map(c => c ? c.v : null));
+      return {rows, idx, labels, headers:h};
+    }
+    last = labels;
+  }
+  throw new Error(`Kolom wajib tidak ditemukan di tab ${T.name} (${T.req.join(', ')}). Header terbaca: ${(last||[]).filter(Boolean).join(' | ')}`);
+}
+
+/* ============ MODEL ============ */
+let M = null;
+const S = { page:'uptime', oview:'po', basis:'std', target:NaN, view:'po', cycs:[], sel:null, okpFrom:'', okpTo:'', cap: {...CFG.cap}, theo: 0 };
+try{ const sv = JSON.parse(localStorage.getItem('nugget_cap')||'null'); if (sv) for (const k of ['cavity','cycle','forming','pickup','yield']) if (sv[k]>0) S.cap[k]=sv[k]; }catch(e){}
+function capCalc(){ const c=S.cap; const fg = c.forming*(1+c.pickup/100); const perMin = c.cavity*c.cycle*fg/1000; return { fg, perMin, perHour: perMin*60, nett: perMin*60*c.yield/100 }; }
+S.theo = capCalc().nett;
+
+function parseDT(v){ // datetime START-STOP: gviz Date(...) atau teks "Monday, 28 September 2026, 23:00"
+  if (v==null || v==='') return null;
+  if (v instanceof Date) return v;
+  const a = gvArgs(String(v)); if (a) return new Date(a[0],a[1],a[2],a[3]||0,a[4]||0,a[5]||0);
+  const t = String(v).replace(/^[A-Za-z]+,\s*/,'').replace(/,(\s*\d{1,2}[:.]\d{2})/,'$1').replace('.',':');
+  const m = /^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})\s+(\d{1,2}):(\d{2})/.exec(t);
+  if (m){ const mi = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(m[2].slice(0,3).toLowerCase());
+    const mi2 = mi>=0 ? mi : ['jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des'].indexOf(m[2].slice(0,3).toLowerCase());
+    if (mi2>=0) return new Date(+m[3],mi2,+m[1],+m[4],+m[5]); }
+  const d = new Date(t); return isNaN(d) ? null : d;
+}
+function tod(v){ const a = gvArgs(String(v||'')); if (a) return a[0]===1899 ? {h:a[3]||0,m:a[4]||0,full:null} : {h:a[3]||0,m:a[4]||0,full:new Date(a[0],a[1],a[2],a[3]||0,a[4]||0)};
+  const m=/^(\d{1,2})[:.](\d{2})/.exec(String(v||'')); return m?{h:+m[1],m:+m[2],full:null}:null; }
+function build(ss, dt, ab, teco){
+  const g = (row, idx, k) => idx[k] >= 0 ? row[idx[k]] : null;
+  const normPO = v => { if (v==null||v==='') return ''; const s=String(typeof v==='number'?Math.round(v):v).trim(); return /^\d{8,}$/.test(s)?s:''; };
+  // 1) DATA ABI & RIAN: output + peta OKP -> PO + cycle
+  const abPO = new Map(); const okpToPo = new Map();
+  for (const r of ab.rows){
+    const po = normPO(g(r, ab.idx,'po')); if (!po) continue;
+    let A = abPO.get(po); if (!A){ A={po, cycle:'', okp:null, kg1:0, ctn1:0, kg2:0, smp:0, waste:0, nLot:0}; abPO.set(po,A); }
+    const cyc = String(g(r,ab.idx,'cycle')||'').trim().toUpperCase(); if (cyc && !A.cycle) A.cycle=cyc;
+    const okp = toDate(g(r,ab.idx,'okp')); if (okp && !A.okp){ A.okp=okp; okpToPo.set(dkey(okp), po); }
+    A.kg1 += Number(g(r,ab.idx,'kg1'))||0; A.ctn1 += Number(g(r,ab.idx,'ctn1'))||0; A.kg2 += Number(g(r,ab.idx,'kg2'))||0;
+    A.smp += Number(g(r,ab.idx,'smp'))||0; A.waste += Number(g(r,ab.idx,'waste'))||0; A.nLot++;
+  }
+  // 1b) TECO kolom O (QTY STHP KG) = Output 1st per PO
+  const tecoKg = new Map();
+  for (const r of teco.rows){ const po = normPO(g(r, teco.idx,'po')); if (!po) continue; tecoKg.set(po, (tecoKg.get(po)||0) + (Number(g(r, teco.idx,'kg'))||0)); }
+  // 2) START-STOP: 1 baris = 1 OKP, Jam Mulai -> Jam Akhir = Production Hours
+  const POs = new Map(); let ssNoPO = []; let ssBad = 0;
+  for (const r of ss.rows){
+    const okp = toDate(g(r, ss.idx,'okp')); let po = normPO(g(r, ss.idx,'po'));
+    const st = parseDT(g(r, ss.idx,'start')), en = parseDT(g(r, ss.idx,'stop'));
+    if (!okp && !po) continue;
+    if (!po && okp) po = okpToPo.get(dkey(okp)) || '';
+    const durCol = Number(g(r, ss.idx,'dur'));
+    let prod = durCol>0 ? durCol : ((st && en && en>st) ? (en-st)/36e5 : 0); // Production Hours = kolom Lama Produksi (jam)
+    if (!po){ ssNoPO.push(dlab(okp)); continue; }
+    if (!(prod>0)){ ssBad++; continue; }
+    const A = abPO.get(po) || {};
+    let P = POs.get(po);
+    const ssCyc = String(g(r,ss.idx,'cycle')||'').trim().toUpperCase();
+    if (!P){ P = {po, cycle:ssCyc||A.cycle||'', okp: okp || A.okp || null, product:String(g(r,ss.idx,'product')||''), start:st, stop:en, prod:0, run:0, PDT:0, UPDT:0, TRIAL:0, OFF:0,
+      kg1:tecoKg.get(po)||0, ctn1:A.ctn1||0, kg2:A.kg2||0, smp:A.smp||0, waste:A.waste||0, nLot:A.nLot||0, lotSS:Number(g(r,ss.idx,'lot'))||0, spans:[], events:[]}; POs.set(po,P); }
+    P.prod += prod; P.spans.push([st,en]);
+    if (st && (!P.start || st<P.start)) P.start=st; if (en && (!P.stop || en>P.stop)) P.stop=en;
+  }
+  for (const P of POs.values()){ P.dmin = P.start ? new Date(P.start.getFullYear(),P.start.getMonth(),P.start.getDate()) : P.okp; P.dmax = P.stop ? new Date(P.stop.getFullYear(),P.stop.getMonth(),P.stop.getDate()) : P.okp; }
+  const abSkipped = [...abPO.keys()].filter(po=>!POs.has(po));
+  // 3) DOWNTIME: posisikan tiap kejadian di garis waktu, masukkan ke OKP yang Jam Mulai–Akhir-nya mencakup
+  const events = []; const seen = new Set(); let dup = {n:0,h:0}; let outside = {n:0,h:0}; let mapMode = {okp:0,time:0};
+  const spanList = [...POs.values()].flatMap(P => P.spans.filter(s=>s[0]&&s[1]).map(s=>({P, a:s[0], b:s[1]})));
+  for (const r of dt.rows){
+    const date = toDate(g(r, dt.idx,'date')); if (!date) continue;
+    let tcat = String(g(r, dt.idx,'tcat')||'').trim().toUpperCase(); if (!tcat || tcat==='-') continue;
+    if (/^UN|UPDT/.test(tcat)) tcat='UPDT'; else if (/PDT|PLAN/.test(tcat)) tcat='PDT'; else if (/TRIAL/.test(tcat)) tcat='TRIAL'; else if (/OFF/.test(tcat)) tcat='OFF';
+    let h = dt.idx.hours>=0 ? Number(g(r, dt.idx,'hours')) : NaN;
+    if (!isFinite(h)) h = dt.idx.mins>=0 ? Number(g(r, dt.idx,'mins'))/60 : 0;
+    if (!isFinite(h) || h<=0) continue;
+    const shift = g(r, dt.idx,'shift'); const sh = shift==null?'':String(shift);
+    const ketIdx = dt.idx.ket>=0 ? dt.idx.ket : (dt.idx.code>=0 ? dt.idx.code+1 : -1);
+    const e = { date, dk:dkey(date), shift:sh, start:hhmm(g(r,dt.idx,'start')), stop:hhmm(g(r,dt.idx,'stop')), h, tcat,
+      machine:String(g(r,dt.idx,'machine')||'').trim(), act:String(g(r,dt.idx,'act')||'').trim(), cat:String(g(r,dt.idx,'cat')||'').trim(),
+      code:String(g(r,dt.idx,'code')||'').trim(), ket: ketIdx>=0 ? String(r[ketIdx]??'').trim() : '', pic:String(g(r,dt.idx,'pic')||'').trim() };
+    const key = [e.dk,e.shift,e.start,e.stop,e.act,e.h.toFixed(3)].join('|');
+    if (seen.has(key)){ dup.n++; dup.h+=h; continue; } seen.add(key);
+    // waktu mulai sebenarnya (shift 3 lewat tengah malam = hari berikutnya)
+    const t0 = tod(g(r,dt.idx,'start'));
+    let ts = null;
+    if (t0){ ts = t0.full || new Date(date.getFullYear(),date.getMonth(),date.getDate(),t0.h,t0.m); if (!t0.full && sh==='3' && t0.h<7) ts = new Date(ts.getTime()+864e5); }
+    e.ts = ts; e.te = ts ? new Date(ts.getTime()+h*36e5) : null; e.tk = ts ? dkey(ts) : e.dk;
+    let po = null; const okpCell = g(r, dt.idx,'okp');
+    if (okpCell!=null && okpCell!==''){ const sv=normPO(okpCell); if (sv && POs.has(sv)) po=sv; else { const od=toDate(okpCell); if (od && okpToPo.has(dkey(od)) && POs.has(okpToPo.get(dkey(od)))) po=okpToPo.get(dkey(od)); } if (po){ mapMode.okp++; e.hIn=h; } }
+    if (!po && ts){ // cari OKP dengan overlap terbesar
+      let best=null, bo=0; for (const s of spanList){ const o = Math.min(e.te,s.b)-Math.max(ts,s.a); if (o>bo){ bo=o; best=s; } }
+      if (best){ po = best.P.po; e.hIn = Math.min(h, bo/36e5); mapMode.time++; }
+    }
+    e.po = po;
+    if (po){ const P = POs.get(po); P[e.tcat]=(P[e.tcat]||0)+e.hIn; P.events.push(e); }
+    else if (e.tcat!=='OFF'){ outside.n++; outside.h+=h; }
+    events.push(e);
+  }
+  for (const P of POs.values()){ P.run = Math.max(0, P.prod - P.OFF - P.PDT - P.UPDT - P.TRIAL); P.over = P.OFF+P.PDT+P.UPDT+P.TRIAL > P.prod + 1e-6; }
+  const list = [...POs.values()].sort((a,b)=>(a.okp||a.start||0)-(b.okp||b.start||0) || a.po.localeCompare(b.po));
+  const cycles = [...new Set(list.map(p=>p.cycle).filter(Boolean))].sort();
+  return { pos:list, POs, events, cycles, dq:{ dup, outside, mapMode, abSkipped, ssNoPO, ssBad, overDT: list.filter(p=>p.over).map(p=>p.po) } };
+}
+
+/* ============ AGREGASI UNTUK TAMPILAN ============ */
+const sumF = (arr,f) => arr.reduce((s,x)=>s+(f(x)||0),0);
+const okpKey = p => dkey(p.okp || p.dmin);
+const rangeOn = () => !!(S.okpFrom || S.okpTo);
+const allCyc = () => !S.cycs.length;
+const inCyc = p => allCyc() || S.cycs.includes(p.cycle);
+const cycName = c => c.replace('CYCLE','Cycle');
+function scopePOs(){ return M.pos.filter(p => inCyc(p) && (!S.okpFrom || okpKey(p)>=S.okpFrom) && (!S.okpTo || okpKey(p)<=S.okpTo)); }
+const theoKg = run => run * (S.theo||0);
+const perf = (kg, run) => /* kg = total output */ (run>0 && S.theo>0 && isFinite(kg)) ? kg/theoKg(run) : NaN;
+function scopeLabel(){
+  const parts = [allCyc() ? 'Semua cycle' : S.cycs.map(cycName).join(' + ')];
+  if (rangeOn()){ const f = S.okpFrom ? dlab(new Date(S.okpFrom+'T00:00:00')) : 'awal', t = S.okpTo ? dlab(new Date(S.okpTo+'T00:00:00')) : 'akhir'; parts.push('OKP '+f+' – '+t); }
+  return parts.join(' · ');
+}
+function agg(label, ps, extra={}){
+  const o = { label, run:sumF(ps,p=>p.run), PDT:sumF(ps,p=>p.PDT), UPDT:sumF(ps,p=>p.UPDT), TRIAL:sumF(ps,p=>p.TRIAL), OFF:sumF(ps,p=>p.OFF), kg1:sumF(ps,p=>p.kg1), kg2:sumF(ps,p=>p.kg2), smp:sumF(ps,p=>p.smp), waste:sumF(ps,p=>p.waste), ...extra };
+  o.total = o.run+o.PDT+o.UPDT+o.TRIAL+o.OFF; o.up = o.total ? o.run/o.total : NaN;
+  o.kgTot = o.kg1+o.kg2+o.smp+o.waste; return o;
+}
+function groups(){
+  const ps = scopePOs();
+  if (S.view==='po') return ps.map(p => ({...agg('', [p]), key:p.po, l1: p.okp ? 'OKP '+dlab(p.okp) : dlab(p.dmin), l2: 'PO '+poShort(p.po), s1: (d=>d?d.getDate()+'/'+(d.getMonth()+1):'–')(p.okp||p.dmin), s2: String(p.po).slice(-4), title:`PO ${p.po} · ${p.cycle||'-'}`, sub:`OKP ${dlab(p.okp)} · ${dlab(p.dmin)}–${dlab(p.dmax)}`, po:p}));
+  if (S.view==='cycle'){
+    const cs = [...new Set(ps.map(p=>p.cycle||'(tanpa cycle)'))];
+    return cs.map(c => { const sub = ps.filter(p=>(p.cycle||'(tanpa cycle)')===c); return {...agg('',sub), key:c, l1:c.replace('CYCLE','Cycle'), l2: sub.length+' PO', title:c, sub: sub.map(p=>poShort(p.po)).join(', ')}; });
+  }
+  // per hari
+  const poSet = new Set(ps.map(p=>p.po));
+  const days = new Map();
+  const D = k => { if (!days.has(k)) days.set(k,{prod:0,run:0,PDT:0,UPDT:0,TRIAL:0,OFF:0,pos:new Set()}); return days.get(k); };
+  for (const P of ps) for (const [a,b] of P.spans){ if (!a||!b) continue; let t=new Date(a);
+    while (t<b){ const nx=new Date(t.getFullYear(),t.getMonth(),t.getDate()+1); const e2 = nx<b?nx:b; const d=D(dkey(t)); d.prod += (e2-t)/36e5; d.pos.add(P.po); t=e2; } }
+  for (const e of M.events){ if (e.po && poSet.has(e.po)){ const d=D(e.tk); d[e.tcat]=(d[e.tcat]||0)+(e.hIn??e.h); d.pos.add(e.po);} else if (!e.po && e.tcat==='OFF' && allCyc() && !rangeOn()) { D(e.tk).OFF += e.h; } }
+  for (const d of days.values()) d.run = Math.max(0, d.prod - d.OFF - d.PDT - d.UPDT - d.TRIAL);
+  const keys = [...days.keys()].filter(Boolean).sort();
+  if (keys.length){ // isi tanggal kosong di antara
+    const a = new Date(keys[0]+'T00:00:00'), b = new Date(keys[keys.length-1]+'T00:00:00');
+    for (let d=new Date(a); d<=b; d.setDate(d.getDate()+1)){ const k=dkey(d); if (!days.has(k)) D(k); }
+  }
+  return [...days.keys()].sort().map(k => { const d=days.get(k); const dt=new Date(k+'T00:00:00'); const total=d.run+d.PDT+d.UPDT+d.TRIAL+d.OFF;
+    return {key:k, label:'', run:d.run, PDT:d.PDT, UPDT:d.UPDT, TRIAL:d.TRIAL, OFF:d.OFF, kg1:NaN, total, up: total? d.run/total : NaN,
+      l1: DOW[dt.getDay()], l2: dt.getDate()+'/'+(dt.getMonth()+1), title: DOW[dt.getDay()]+', '+dlab(dt), sub: d.pos.size ? 'PO '+[...d.pos].map(poShort).join(', ') : (d.OFF? 'OFF / No Schedule':'Tidak ada data') }; });
+}
+
+/* ============ RENDER: KPI ============ */
+function renderKPIs(){
+  const ps = scopePOs(); const sel = S.sel && S.view==='po' ? ps.filter(p=>p.po===S.sel) : ps;
+  const a = agg('', sel);
+  const kgph = a.run ? a.kg1/a.run : NaN;
+  const lab = S.sel && S.view==='po' ? 'PO '+S.sel : scopeLabel();
+  const pf = perf(a.kgTot, a.run);
+  $('#kpis').innerHTML = `
+    <div class="kpi hero"><div class="l">Uptime % · ${esc(lab)}</div><div class="v">${fp1(a.up)}</div><div class="d">Uptime ${fh(a.run)} dari ${fh(a.total)} jam produksi</div></div>
+    <div class="kpi"><div class="l"><span class="sw" style="background:var(--run)"></span>Uptime (jam)</div><div class="v">${fh(a.run)}<small>jam</small></div><div class="d">Production Hours ${fh(a.total)} jam</div></div>
+    <div class="kpi"><div class="l"><span class="sw" style="background:var(--pdt)"></span>Planned DT</div><div class="v">${fh(a.PDT)}<small>jam</small></div><div class="d">${fp(a.total? a.PDT/a.total:NaN)} waktu</div></div>
+    <div class="kpi"><div class="l"><span class="sw" style="background:var(--updt)"></span>Unplanned DT</div><div class="v">${fh(a.UPDT)}<small>jam</small></div><div class="d">${fp(a.total? a.UPDT/a.total:NaN)} waktu${a.TRIAL? ' · Trial '+fh(a.TRIAL)+' j':''}</div></div>
+    <div class="kpi"><div class="l">Output 1st</div><div class="v">${NF0.format(a.kg1)}<small>kg</small></div><div class="d">Teoritis ${NF0.format(theoKg(a.run))} kg · ${sel.length} PO</div></div>
+    <div class="kpi"><div class="l">Output per jam uptime</div><div class="v">${isFinite(kgph)?NF0.format(kgph):'–'}<small>kg/jam</small></div><div class="d">Teoritis ${NF0.format(S.theo)} kg/jam · Performa <b>${fp(pf)}</b></div></div>`;
+}
+
+/* ============ RENDER: CHART ============ */
+function inkFor(hex){ const m=/^#?([0-9a-f]{6})$/i.exec(hex||''); if(!m) return '#fff'; const n=parseInt(m[1],16); const L=(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))/255; return L>0.62?'#163A26':'#FFFFFF'; }
+function niceMax(v, steps){ if (!(v>0)) return steps; const raw=v/steps; const p=Math.pow(10,Math.floor(Math.log10(raw))); const n=[1,1.5,2,2.5,3,4,5,6,8,10].find(x=>x*p>=raw)*p; return n*steps; }
+function renderChart(){
+  const box = $('#chartBox'); const G = groups();
+  if (!G.length){ box.innerHTML = '<div class="empty">Tidak ada data untuk filter ini.</div>'; $('#legend').innerHTML=''; return; }
+  const W = Math.max(320, box.clientWidth); const H = 350;
+  const showLine = S.view!=='day' && G.some(g=>g.kg1>0);
+  const mL=42, mR= showLine? 56:14, mT=40, mB=62;
+  const pw = W-mL-mR, ph = H-mT-mB;
+  const maxT = Math.max(...G.map(g=>g.total));
+  const yMax = S.view==='day' ? Math.max(24, niceMax(maxT,4)) : niceMax(maxT*(showLine?1.45:1.05),4);
+  const ySteps = 4; const yS = v => mT + ph - v/yMax*ph;
+  const kMax = showLine ? niceMax(Math.max(...G.map(g=>g.kg1||0)),2) : 1; const yK = v => mT + ph - v/kMax*ph;
+  const band = pw/G.length; const bw = Math.max(8, Math.min(64, band*0.74));
+  const cx = i => mL + band*i + band/2;
+  const css = getComputedStyle(document.documentElement); const C = n => css.getPropertyValue(n).trim();
+  let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik uptime">`;
+  for (let i=0;i<=ySteps;i++){ const v=yMax/ySteps*i, y=yS(v);
+    s += `<line x1="${mL}" x2="${W-mR}" y1="${y}" y2="${y}" stroke="${C('--grid')}" stroke-width="1"/>`;
+    s += `<text x="${mL-8}" y="${y+4}" text-anchor="end" font-size="11.5" fill="${C('--muted')}">${NF0.format(v)}j</text>`;
+    if (showLine) s += `<text x="${W-mR+8}" y="${y+4}" font-size="11.5" fill="${C('--muted')}">${NF1.format(kMax/ySteps*i/1000)}t</text>`;
+  }
+  const segs = [['run','--run'],['PDT','--pdt'],['UPDT','--updt'],['TRIAL','--trial'],['OFF','--off']];
+  G.forEach((g,i)=>{
+    const x = cx(i)-bw/2; let base = 0; const sel = S.sel===g.key;
+    const dim = S.sel && !sel && S.view==='po';
+    s += `<g class="bar" data-i="${i}" opacity="${dim?0.45:1}">`;
+    if (g.total<=0){ s += `<rect x="${x}" y="${yS(0)-3}" width="${bw}" height="3" rx="1.5" fill="${C('--line')}"/>`; }
+    const present = segs.filter(([k])=>g[k]>0);
+    present.forEach(([k,col],j)=>{
+      const v=g[k]; const y1=yS(base+v), y0=yS(base); const top = j===present.length-1;
+      const hgt = Math.max(0, y0-y1-(j>0?2:0)); const yy = y1;
+      if (hgt>0){
+        if (top){ const r=Math.min(5,hgt,bw/2); s += `<path d="M${x},${yy+hgt} V${yy+r} Q${x},${yy} ${x+r},${yy} H${x+bw-r} Q${x+bw},${yy} ${x+bw},${yy+r} V${yy+hgt} Z" fill="${C(col)}"/>`; }
+        else s += `<rect x="${x}" y="${yy}" width="${bw}" height="${hgt}" fill="${C(col)}"/>`;
+        const pct = v/g.total;
+        if (hgt>=17 && bw>=30 && pct>=0.04){ const fs = bw>=48?13:11.5;
+          s += `<text x="${x+bw/2}" y="${yy+hgt/2+fs*0.36}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="${inkFor(C(col))}">${fp(pct)}</text>`; }
+      }
+      base += v;
+    });
+    s += `<rect class="hit" x="${mL+band*i}" y="${mT}" width="${band}" height="${ph+mB}" fill="transparent"/>`;
+    const compact = band<88 && g.s1; const fsx = band<36?9.5:(band<60?10.5:12);
+    s += `<text x="${cx(i)}" y="${H-mB+18}" text-anchor="middle" font-size="${fsx}" font-weight="${sel?800:500}" fill="${sel?C('--sel'):C('--muted')}">${esc(compact?g.s1:g.l1)}</text>`;
+    s += `<text x="${cx(i)}" y="${H-mB+33}" text-anchor="middle" font-size="${fsx-1}" fill="${C('--muted')}">${esc(compact?g.s2:g.l2)}</text>`;
+    if (g.total>0 && S.view!=='day') s += `<text x="${cx(i)}" y="${H-mB+52}" text-anchor="middle" font-size="${fsx}" font-weight="800" fill="${C('--ink')}">${compact?'':'Uptime '}${fp(g.up)}</text>`;
+    s += `</g>`;
+  });
+  if (showLine){
+    const pts = G.map((g,i)=>[cx(i), yK(g.kg1||0), g]).filter(p=>p[2].kg1>0);
+    if (pts.length){
+      const d = pts.map((p,i)=>(i?'L':'M')+p[0]+','+p[1]).join(' ');
+      s += `<path d="${d}" fill="none" stroke="${C('--lineEdge')}" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>`;
+      s += `<path d="${d}" fill="none" stroke="${C('--lineStroke')}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+      pts.forEach(([x,y,g])=>{
+        s += `<circle cx="${x}" cy="${y}" r="5.5" fill="${C('--lineStroke')}" stroke="${C('--lineEdge')}" stroke-width="2.5"/>`;
+        const t = ft(g.kg1); const tw = t.length*7+16; let py = y-26; if (py<20) py = y+12;
+        s += `<rect x="${x-tw/2}" y="${py}" width="${tw}" height="20" rx="10" fill="${C('--pill')}"/><text x="${x}" y="${py+14}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${C('--pillInk')}">${t}</text>`;
+        if (g.run>0){ const kh = NF0.format(g.kg1/g.run)+' kg/jam'; s += `<text x="${x}" y="${py-5}" text-anchor="middle" font-size="11" font-weight="700" fill="${C('--ink2')}">${kh}</text>`; }
+      });
+    }
+  }
+  s += `</svg><div class="tip" id="tip"></div>`;
+  box.innerHTML = s;
+  const tip = $('#tip');
+  box.querySelectorAll('g.bar').forEach(el=>{
+    const g = G[+el.dataset.i];
+    el.addEventListener('mousemove', ev=>{
+      const r = box.getBoundingClientRect();
+      tip.innerHTML = `<b>${esc(g.title)}</b><div class="sub" style="margin-bottom:6px">${esc(g.sub)}</div>
+        <div class="r"><span><span class="sw" style="background:var(--run)"></span>Uptime (jam)</span><span>${fh(g.run)} j · ${fp(g.total?g.run/g.total:NaN)}</span></div>
+        <div class="r"><span><span class="sw" style="background:var(--pdt)"></span>Planned DT</span><span>${fh(g.PDT)} j · ${fp(g.total?g.PDT/g.total:NaN)}</span></div>
+        <div class="r"><span><span class="sw" style="background:var(--updt)"></span>Unplanned DT</span><span>${fh(g.UPDT)} j · ${fp(g.total?g.UPDT/g.total:NaN)}</span></div>
+        ${g.TRIAL?`<div class="r"><span><span class="sw" style="background:var(--trial)"></span>Trial</span><span>${fh(g.TRIAL)} j</span></div>`:''}
+        ${g.OFF?`<div class="r"><span><span class="sw" style="background:var(--off)"></span>OFF / No Schedule</span><span>${fh(g.OFF)} j · ${fp(g.total?g.OFF/g.total:NaN)}</span></div>`:''}
+        <div class="r" style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><span>Production Hours</span><span>${fh(g.total)} j</span></div>
+        <div class="r" style="font-weight:800"><span style="color:var(--ink)">Uptime %</span><span>${fp1(g.up)}</span></div>
+        ${isFinite(g.kg1)?`<div class="r" style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><span>Output 1st</span><span>${NF0.format(g.kg1)} kg</span></div><div class="r"><span>Output teoritis</span><span>${NF0.format(theoKg(g.run))} kg</span></div><div class="r"><span>kg / jam uptime</span><span>${g.run?NF0.format(g.kg1/g.run):'–'} / ${NF0.format(S.theo)}</span></div><div class="r"><span>Performa</span><span>${fp(perf(g.kgTot,g.run))}</span></div>`:''}
+        ${S.view==='po'?'<div class="sub" style="margin-top:6px">Klik untuk pilih / batal pilih PO</div>':''}`;
+      tip.style.display='block';
+      let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 10;
+      if (x + tip.offsetWidth > r.width) x = ev.clientX - r.left - tip.offsetWidth - 14;
+      tip.style.left = Math.max(0,x)+'px'; tip.style.top = y+'px';
+    });
+    el.addEventListener('mouseleave', ()=> tip.style.display='none');
+    el.addEventListener('click', ()=>{
+      if (S.view==='po'){ S.sel = S.sel===g.key ? null : g.key; renderAll(); }
+      else if (S.view==='cycle'){ S.cycs = M.cycles.includes(g.key)?[g.key]:[]; S.view='po'; S.sel=null; renderAll(); }
+    });
+  });
+  $('#legend').innerHTML = `<span><i style="background:var(--run)"></i>Uptime (jam)</span><span><i style="background:var(--pdt)"></i>Planned DT</span><span><i style="background:var(--updt)"></i>Unplanned DT</span>${G.some(g=>g.TRIAL>0)?'<span><i style="background:var(--trial)"></i>Trial</span>':''}${G.some(g=>g.OFF>0)?'<span><i style="background:var(--off)"></i>OFF / No Schedule</span>':''}${showLine?'<span><i class="ln"></i>Output 1st (kg, sumbu kanan · t = ton)</span>':''}`;
+}
+
+/* ============ RENDER: PARETO, KOMPOSISI, TABEL, LOG ============ */
+function scopeEvents(){
+  const ps = scopePOs(); const set = new Set((S.sel && S.view==='po') ? [S.sel] : ps.map(p=>p.po));
+  return M.events.filter(e => e.po && set.has(e.po));
+}
+function renderPareto(){
+  const ev = scopeEvents().filter(e=>e.tcat==='UPDT');
+  const m = new Map(); for (const e of ev){ const k=e.act||'(tanpa deskripsi)'; const o=m.get(k)||{h:0,n:0,mach:new Set(),cat:e.cat}; o.h+=(e.hIn??e.h); o.n++; if(e.machine) o.mach.add(e.machine); m.set(k,o); }
+  const rows = [...m.entries()].sort((a,b)=>b[1].h-a[1].h); const tot = sumF(rows,r=>r[1].h); const top = rows.slice(0,8); const max = top.length? top[0][1].h : 1;
+  $('#paretoSub').textContent = `${fh(tot)} jam Unplanned DT · ${ev.length} kejadian` + (S.sel?` · PO ${S.sel}`:'');
+  $('#pareto').innerHTML = top.length ? top.map(([k,o])=>`<div class="row"><div class="nm" title="${esc(k)}">${esc(k)}<small>${esc(o.cat)} · ${esc([...o.mach].join(', '))} · ${o.n}×</small></div><div><div class="bar" style="width:${Math.max(2,o.h/max*100)}%"></div></div><div class="val">${fh(o.h)} j</div></div>`).join('')
+    + (rows.length>8?`<div class="sub" style="margin-top:6px">+${rows.length-8} penyebab lain · ${fh(sumF(rows.slice(8),r=>r[1].h))} jam</div>`:'')
+    : '<div class="empty">Tidak ada Unplanned DT.</div>';
+}
+function renderCats(){
+  const ev = scopeEvents().filter(e=>e.tcat!=='OFF');
+  const byCat = new Map(); for (const e of ev){ const k=(e.tcat)+'|'+(e.cat||'-'); byCat.set(k,(byCat.get(k)||0)+(e.hIn??e.h)); }
+  const byM = new Map(); for (const e of ev.filter(e=>e.tcat==='UPDT')){ const k=e.machine||'-'; byM.set(k,(byM.get(k)||0)+(e.hIn??e.h)); }
+  const cats = [...byCat.entries()].sort((a,b)=>b[1]-a[1]); const mx = Math.max(1,...cats.map(c=>c[1]));
+  const ms = [...byM.entries()].sort((a,b)=>b[1]-a[1]); const mx2 = Math.max(1,...ms.map(c=>c[1]));
+  $('#catBox').innerHTML = (cats.length? cats.map(([k,h])=>{const [t,c]=k.split('|'); return `<div class="row"><div class="nm">${esc(c)}<small><span class="cat ${t}">${t}</span></small></div><div><div class="bar ${t==='PDT'?'p':''}" style="width:${Math.max(2,h/mx*100)}%;${t==='TRIAL'?'background:var(--trial)':''}"></div></div><div class="val">${fh(h)} j</div></div>`;}).join('') : '<div class="empty">Tidak ada downtime.</div>')
+    + (ms.length? `<div class="sub" style="margin:14px 0 2px;font-weight:700">Unplanned DT per mesin</div>` + ms.map(([k,h])=>`<div class="row"><div class="nm">${esc(k)}</div><div><div class="bar" style="width:${Math.max(2,h/mx2*100)}%"></div></div><div class="val">${fh(h)} j</div></div>`).join('') : '');
+}
+function renderTable(){
+  const ps = scopePOs();
+  const tot = agg('', ps);
+  $('#tblScope').textContent = scopeLabel();
+  const row = p => { const a=agg('',[p]); return `<tr data-po="${p.po}" class="${S.sel===p.po?'sel':''}"><td class="l">${esc((p.cycle||'-').replace('CYCLE','Cycle'))}</td><td class="l"><b>${p.po}</b></td><td class="l">${dlab(p.okp)}</td><td class="l">${dlab(p.dmin)} – ${dlab(p.dmax)}</td><td>${fh(a.total)}</td><td>${fh(a.run)}</td><td>${fh(a.PDT)}</td><td>${fh(a.UPDT)}</td><td>${a.TRIAL?fh(a.TRIAL):'–'}</td><td><b>${fp1(a.up)}</b></td><td>${p.kg1?NF0.format(p.kg1):'–'}</td><td>${NF0.format(theoKg(a.run))}</td><td>${p.kg1&&a.run?NF0.format(p.kg1/a.run):'–'}</td><td>${p.kg1?fp(perf(a.kgTot,a.run)):'–'}</td></tr>`; };
+  $('#poTbl').innerHTML = `<thead><tr><th class="l">Cycle</th><th class="l">No PO</th><th class="l">OKP</th><th class="l">Tanggal</th><th>Production Hours (j)</th><th>Uptime (j)</th><th>PDT (j)</th><th>UPDT (j)</th><th>Trial (j)</th><th>Uptime %</th><th>1st (kg)</th><th>Teoritis (kg)</th><th>kg/jam</th><th>Performa</th></tr></thead>
+    <tbody>${ps.map(row).join('')}</tbody>
+    <tfoot><tr><td class="l" colspan="4">Total · ${esc(scopeLabel())}</td><td>${fh(tot.total)}</td><td>${fh(tot.run)}</td><td>${fh(tot.PDT)}</td><td>${fh(tot.UPDT)}</td><td>${tot.TRIAL?fh(tot.TRIAL):'–'}</td><td>${fp1(tot.up)}</td><td>${NF0.format(tot.kg1)}</td><td>${NF0.format(theoKg(tot.run))}</td><td>${tot.run?NF0.format(tot.kg1/tot.run):'–'}</td><td>${fp(perf(tot.kgTot,tot.run))}</td></tr></tfoot>`;
+  $('#poTbl').querySelectorAll('tbody tr').forEach(tr=>tr.addEventListener('click',()=>{ const po=tr.dataset.po; S.view='po'; S.sel = S.sel===po?null:po; renderAll(); }));
+}
+function renderLog(){
+  const ev = scopeEvents().slice().sort((a,b)=> a.dk.localeCompare(b.dk) || String(a.shift).localeCompare(String(b.shift)) || a.start.localeCompare(b.start));
+  $('#logSub').textContent = `${ev.length} kejadian · ${fh(sumF(ev,e=>e.h))} jam` + (S.sel?` · PO ${S.sel}`:` · ${scopeLabel()}`);
+  $('#logTbl').innerHTML = `<thead><tr><th class="l">Tanggal</th><th class="l">Shift</th><th class="l">Jam</th><th>Durasi (j)</th><th class="l">Jenis</th><th class="l">Mesin</th><th class="l">Aktivitas</th><th class="l">PO</th><th class="l">Keterangan</th></tr></thead>
+    <tbody>${ev.map(e=>`<tr><td class="l">${DOW[e.date.getDay()]} ${dlab(e.date)}</td><td class="l">${esc(e.shift)}</td><td class="l">${esc(e.start)}–${esc(e.stop)}</td><td>${NF2.format(e.h)}</td><td class="l"><span class="cat ${e.tcat}">${e.tcat}</span></td><td class="l">${esc(e.machine)}</td><td class="l">${esc(e.act)}</td><td class="l">${poShort(e.po)}</td><td class="desc">${esc(e.ket)}</td></tr>`).join('')}</tbody>`;
+}
+function renderDQ(){
+  const q = M.dq; const items = [];
+  if (q.ssNoPO.length) items.push(`${q.ssNoPO.length} OKP di START-STOP (${q.ssNoPO.join(', ')}) belum punya No PO di DATA ABI &amp; RIAN, jadi belum ditampilkan.`);
+  if (q.overDT.length) items.push(`Downtime lebih besar dari Production Hours untuk PO ${q.overDT.map(poShort).join(', ')}; Run Time dibuat 0.`);
+  if (q.dup.n) items.push(`<b>${q.dup.n} baris DOWNTIME dobel</b> (tanggal, shift, jam, dan aktivitas sama; ${fh(q.dup.h)} jam) tidak dihitung ulang.`);
+  if (q.outside.n) items.push(`${q.outside.n} kejadian downtime (${fh(q.outside.h)} jam) terjadi di luar Jam Mulai–Akhir OKP mana pun (mis. jeda antar OKP), jadi tidak masuk Production Hours.`);
+  if (q.mapMode.time) items.push(`Kolom OKP di DOWNTIME ${q.mapMode.okp? 'baru sebagian terisi':'masih kosong'}: ${q.mapMode.time} kejadian dimasukkan ke OKP berdasarkan jam kejadian di antara Jam Mulai–Akhir START-STOP (shift 3 sebelum 07:00 dihitung hari berikutnya).`);
+  if (q.abSkipped.length) items.push(`PO ${q.abSkipped.map(poShort).join(', ')} ada di DATA ABI &amp; RIAN tapi OKP-nya tidak ada di START-STOP; output-nya tidak ditampilkan.`);
+  $('#dqCard').style.display = items.length? '':'none';
+  $('#dq').innerHTML = `<ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+}
+function renderControls(){
+  const cycHtml = ['ALL',...M.cycles].map(c=>`<button data-c="${esc(c)}" class="${(c==='ALL'?allCyc():S.cycs.includes(c))?'on':''}" title="${c==='ALL'?'Semua cycle':'Klik untuk pilih / batal pilih (bisa lebih dari 1)'}">${c==='ALL'?'Semua':esc(cycName(c))}</button>`).join('');
+  document.querySelectorAll('.cycSel').forEach(el=>{ el.innerHTML = cycHtml; el.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const c=b.dataset.c;
+    if (c==='ALL') S.cycs=[];
+    else { S.cycs = S.cycs.includes(c) ? S.cycs.filter(x=>x!==c) : [...S.cycs, c].sort(); if (S.cycs.length===M.cycles.length) S.cycs=[]; }
+    S.sel=null; renderAll(); }); });
+  $('#viewSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===S.view));
+  const okps = [...new Map(M.pos.filter(inCyc).map(p=>[okpKey(p), p])).entries()].filter(([k])=>k).sort((a,b)=>a[0].localeCompare(b[0]));
+  const opt = (sel, ph) => `<option value="">${ph}</option>` + okps.map(([k,p])=>`<option value="${k}" ${k===sel?'selected':''}>${dlab(new Date(k+'T00:00:00'))} · ${poShort(p.po)}</option>`).join('');
+  if (S.okpFrom && !okps.some(o=>o[0]===S.okpFrom)) S.okpFrom=''; if (S.okpTo && !okps.some(o=>o[0]===S.okpTo)) S.okpTo='';
+  $('#okpFrom').innerHTML = opt(S.okpFrom,'awal'); $('#okpTo').innerHTML = opt(S.okpTo,'akhir');
+  $('#okpReset').style.visibility = rangeOn() ? 'visible':'hidden';
+  for (const [id,k] of [['capCavity','cavity'],['capCycle','cycle'],['capForming','forming'],['capPickup','pickup'],['capYield','yield']]) if (document.activeElement!==$('#'+id)) $('#'+id).value = S.cap[k];
+  const cc = capCalc(); $('#capOut').innerHTML = `${NF0.format(cc.nett)} kg/jam <small>(FG ${NF2.format(cc.fg)} g · ${NF2.format(cc.perMin)} kg/mnt · teoritis ${NF0.format(cc.perHour)} kg/jam × yield ${NF1.format(S.cap.yield)}%)</small>`;
+  $('#selNote').innerHTML = S.sel && S.view==='po' ? `Dipilih: <b>PO ${S.sel}</b> · <a id="clrSel">hapus pilihan</a>` : '';
+  const c = $('#clrSel'); if (c) c.onclick = ()=>{ S.sel=null; renderAll(); };
+}
+function renderAll(){ if (!M) return; renderControls(); document.querySelectorAll('.scopeTag').forEach(e=>e.textContent=scopeLabel());
+  if (S.page==='oee') renderOEE(); else { renderKPIs(); renderChart(); renderPareto(); renderCats(); renderTable(); renderLog(); } }
+
+/* ============ OEE ============ */
+function oee(a){
+  const ppt = S.basis==='tot' ? a.total : a.run+a.UPDT;
+  const A = ppt>0 ? a.run/ppt : NaN;
+  const P = (a.run>0 && S.theo>0 && a.kgTot>0) ? a.kgTot/theoKg(a.run) : NaN;
+  const Q = a.kgTot>0 ? a.kg1/a.kgTot : NaN;
+  return { ppt, A, P, Q, O: A*P*Q };
+}
+function oeeGroups(){
+  const ps = scopePOs();
+  if (S.oview==='cycle'){
+    const cs = [...new Set(ps.map(p=>p.cycle||'(tanpa cycle)'))];
+    return cs.map(c => { const sub = ps.filter(p=>(p.cycle||'(tanpa cycle)')===c); const a=agg('',sub); return {a, o:oee(a), key:c, l1:cycName(c), l2: sub.length+' PO', title:cycName(c), sub: 'PO '+sub.map(p=>poShort(p.po)).join(', ')}; });
+  }
+  return ps.map(p => { const a=agg('',[p]); return {a, o:oee(a), key:p.po, l1: p.okp ? 'OKP '+dlab(p.okp) : dlab(p.dmin), l2:'PO '+poShort(p.po), s1:(d=>d?d.getDate()+'/'+(d.getMonth()+1):'–')(p.okp||p.dmin), s2:poShort(p.po), title:`PO ${p.po} · ${cycName(p.cycle||'-')}`, sub:`OKP ${dlab(p.okp)} · ${dlab(p.dmin)}–${dlab(p.dmax)}`}; });
+}
+function oeeScopeAgg(){
+  const ps = scopePOs(); const sel = S.sel && S.oview==='po' ? ps.filter(p=>p.po===S.sel) : ps;
+  return { a: agg('', sel), n: sel.length, lab: S.sel && S.oview==='po' ? 'PO '+S.sel : scopeLabel() };
+}
+function renderOeeKPIs(){
+  const {a, n, lab} = oeeScopeAgg(); const o = oee(a);
+  const tgt = isFinite(S.target) ? ` · target ${NF0.format(S.target)}%` : '';
+  $('#oeeKpis').innerHTML = `
+    <div class="kpi hero"><div class="l">OEE · ${esc(lab)}</div><div class="v">${fp1(o.O)}</div><div class="d">${fp(o.A)} × ${fp(o.P)} × ${fp(o.Q)}${tgt}</div></div>
+    <div class="kpi"><div class="l"><span class="sw" style="background:var(--oA)"></span>Availability</div><div class="v">${fp1(o.A)}</div><div class="d">Uptime ${fh(a.run)} ÷ ${fh(o.ppt)} jam ${S.basis==='tot'?'total':'produksi terencana'}</div></div>
+    <div class="kpi"><div class="l"><span class="sw" style="background:var(--oP)"></span>Performance</div><div class="v">${fp1(o.P)}</div><div class="d">${NF0.format(a.kgTot)} ÷ ${NF0.format(theoKg(a.run))} kg teoritis</div></div>
+    <div class="kpi"><div class="l"><span class="sw" style="background:var(--oQ)"></span>Quality</div><div class="v">${fp1(o.Q)}</div><div class="d">1st ${NF0.format(a.kg1)} ÷ total ${NF0.format(a.kgTot)} kg</div></div>
+    <div class="kpi"><div class="l">Output 1st (good)</div><div class="v">${NF0.format(a.kg1)}<small>kg</small></div><div class="d">Waste ${NF0.format(a.waste)} · 2nd ${NF0.format(a.kg2)} · Sample ${NF0.format(a.smp)} kg</div></div>
+    <div class="kpi"><div class="l">Output ideal</div><div class="v">${NF0.format(theoKg(o.ppt))}<small>kg</small></div><div class="d">${NF0.format(S.theo)} kg/jam × ${fh(o.ppt)} jam · ${n} PO</div></div>`;
+}
+function renderOeeChart(){
+  const box = $('#oeeChart'); const G = oeeGroups();
+  if (!G.length){ box.innerHTML = '<div class="empty">Tidak ada data untuk filter ini.</div>'; $('#oeeLegend').innerHTML=''; return; }
+  const W = Math.max(320, box.clientWidth); const H = 330;
+  const mL=44, mR=14, mT=30, mB=46; const pw=W-mL-mR, ph=H-mT-mB;
+  const vmax = Math.max(1, ...G.flatMap(g=>[g.o.A,g.o.P,g.o.Q].filter(isFinite)));
+  const yMax = vmax<=1 ? 1 : Math.ceil(vmax*10)/10; const yS = v => mT+ph-Math.min(v,yMax)/yMax*ph;
+  const css = getComputedStyle(document.documentElement); const C = n => css.getPropertyValue(n).trim();
+  const band = pw/G.length; const gap = 2; const bw = Math.max(4, Math.min(22, (band*0.8 - gap*3)/4)); const grpW = bw*4+gap*3;
+  const cx = i => mL + band*i + band/2;
+  let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik OEE">`;
+  const steps = Math.round(yMax/0.25);
+  for (let i=0;i<=steps;i++){ const v=i*0.25, y=yS(v);
+    s += `<line x1="${mL}" x2="${W-mR}" y1="${y}" y2="${y}" stroke="${C('--grid')}" stroke-width="1"/><text x="${mL-8}" y="${y+4}" text-anchor="end" font-size="11.5" fill="${C('--muted')}">${NF0.format(v*100)}%</text>`; }
+  if (isFinite(S.target)){ const y=yS(S.target/100); s += `<line x1="${mL}" x2="${W-mR}" y1="${y}" y2="${y}" stroke="${C('--ink')}" stroke-width="1.5" stroke-dasharray="6 4"/><text x="${W-mR}" y="${y-6}" text-anchor="end" font-size="11.5" font-weight="700" fill="${C('--ink')}">Target ${NF0.format(S.target)}%</text>`; }
+  const keys = [['A','--oA'],['P','--oP'],['Q','--oQ'],['O','--oO']];
+  G.forEach((g,i)=>{
+    const sel = S.sel===g.key; const dim = S.sel && !sel && S.oview==='po';
+    s += `<g class="bar" data-i="${i}" opacity="${dim?0.4:1}">`;
+    keys.forEach(([k,col],j)=>{ const v=g.o[k]; if (!isFinite(v)) return; const x = cx(i)-grpW/2 + j*(bw+gap); const y=yS(v), h=Math.max(1,yS(0)-y); const r=Math.min(4,h,bw/2);
+      s += `<path d="M${x},${y+h} V${y+r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y+r} V${y+h} Z" fill="${C(col)}"/>`;
+      if (k==='O'){ s += `<text x="${x+bw/2}" y="${y-6}" text-anchor="middle" font-size="${band<70?10.5:12}" font-weight="800" fill="${C('--ink')}">${fp(v)}</text>`; }
+    });
+    s += `<rect x="${mL+band*i}" y="${mT}" width="${band}" height="${ph+mB}" fill="transparent"/>`;
+    const compact = band<88 && g.s1; const fsx = band<36?9.5:(band<60?10.5:12);
+    s += `<text x="${cx(i)}" y="${H-mB+18}" text-anchor="middle" font-size="${fsx}" font-weight="${sel?800:500}" fill="${sel?C('--sel'):C('--muted')}">${esc(compact?g.s1:g.l1)}</text>`;
+    s += `<text x="${cx(i)}" y="${H-mB+33}" text-anchor="middle" font-size="${fsx-1}" fill="${C('--muted')}">${esc(compact?g.s2:g.l2)}</text></g>`;
+  });
+  s += `</svg><div class="tip" id="oeeTip"></div>`;
+  box.innerHTML = s; const tip = $('#oeeTip');
+  box.querySelectorAll('g.bar').forEach(el=>{ const g = G[+el.dataset.i];
+    el.addEventListener('mousemove', ev=>{ const r = box.getBoundingClientRect(); const a=g.a, o=g.o;
+      tip.innerHTML = `<b>${esc(g.title)}</b><div class="sub" style="margin-bottom:6px">${esc(g.sub)}</div>
+        <div class="r"><span><span class="sw" style="background:var(--oA)"></span>Availability</span><span>${fp1(o.A)}</span></div>
+        <div class="r"><span><span class="sw" style="background:var(--oP)"></span>Performance</span><span>${fp1(o.P)}</span></div>
+        <div class="r"><span><span class="sw" style="background:var(--oQ)"></span>Quality</span><span>${fp1(o.Q)}</span></div>
+        <div class="r" style="font-weight:800;border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><span style="color:var(--ink)"><span class="sw" style="background:var(--oO)"></span>OEE</span><span>${fp1(o.O)}</span></div>
+        <div class="r" style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><span>Uptime (jam)</span><span>${fh(a.run)} j</span></div>
+        <div class="r"><span>${S.basis==='tot'?'Total waktu':'Waktu produksi terencana'}</span><span>${fh(o.ppt)} j</span></div>
+        <div class="r"><span>Total output</span><span>${NF0.format(a.kgTot)} kg</span></div>
+        <div class="r"><span>Output teoritis</span><span>${NF0.format(theoKg(a.run))} kg</span></div>
+        <div class="r"><span>Output 1st</span><span>${NF0.format(a.kg1)} kg</span></div>
+        ${S.oview==='po'?'<div class="sub" style="margin-top:6px">Klik untuk pilih / batal pilih PO</div>':'<div class="sub" style="margin-top:6px">Klik untuk lihat PO di cycle ini</div>'}`;
+      tip.style.display='block'; let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 10;
+      if (x + tip.offsetWidth > r.width) x = ev.clientX - r.left - tip.offsetWidth - 14;
+      tip.style.left = Math.max(0,x)+'px'; tip.style.top = y+'px'; });
+    el.addEventListener('mouseleave', ()=> tip.style.display='none');
+    el.addEventListener('click', ()=>{ if (S.oview==='po'){ S.sel = S.sel===g.key?null:g.key; } else { S.cycs = M.cycles.includes(g.key)?[g.key]:[]; S.oview='po'; S.sel=null; } renderAll(); });
+  });
+  $('#oeeLegend').innerHTML = `<span><i style="background:var(--oA)"></i>Availability</span><span><i style="background:var(--oP)"></i>Performance</span><span><i style="background:var(--oQ)"></i>Quality</span><span><i style="background:var(--oO)"></i>OEE (angka di atas batang)</span>`;
+}
+function renderLoss(){
+  const {a, lab} = oeeScopeAgg(); const o = oee(a); const th = S.theo||1;
+  const sched = a.total;
+  const speed = Math.max(0, a.run - a.kgTot/th), qual = Math.max(0, (a.kgTot - a.kg1)/th), good = a.kg1/th;
+  const over = a.kgTot/th > a.run;
+  const rows = [];
+  let x = 0; const W = Math.max(sched, a.run, good, 1e-9);
+  const pct = v => (v/W*100);
+  rows.push({nm:'Production Hours', sm:'Lama Produksi (jam) di START-STOP', l:0, w:sched, col:'var(--trial)', v:sched, tot:true});
+  if (S.basis==='std'){
+    rows.push({nm:'Planned DT + Trial'+(a.OFF?' + OFF':''), sm:'tidak dihitung di OEE standar', l:o.ppt, w:a.PDT+a.TRIAL+a.OFF, col:'var(--pdt)', v:a.PDT+a.TRIAL+a.OFF, neg:true});
+    rows.push({nm:'Waktu produksi terencana', sm:'dasar Availability', l:0, w:o.ppt, col:'var(--trial)', v:o.ppt, tot:true});
+  }
+  rows.push({nm:'Availability loss', sm:'Unplanned DT', l:a.run, w:a.UPDT, col:'var(--updt)', v:a.UPDT, neg:true, ref: S.basis==='std'?o.ppt:sched});
+  if (S.basis==='tot') rows.push({nm:'Planned DT + Trial'+(a.OFF?' + OFF':''), sm:'dihitung sebagai loss', l:a.run+a.UPDT, w:a.PDT+a.TRIAL+a.OFF, col:'var(--pdt)', v:a.PDT+a.TRIAL+a.OFF, neg:true, ref:sched});
+  rows.push({nm:'Uptime (jam)', sm:'Availability '+fp1(o.A), l:0, w:a.run, col:'var(--oA)', v:a.run, tot:true});
+  rows.push({nm:'Performance loss', sm:over?'output > kapasitas teoritis':'jalan di bawah '+NF0.format(th)+' kg/jam', l:a.kgTot/th, w:speed, col:'var(--loss)', v:speed, neg:true, ref:a.run});
+  rows.push({nm:'Quality loss', sm:'waste + 2nd + sample (kg ÷ '+NF0.format(th)+')', l:good, w:qual, col:'var(--lossQ)', v:qual, neg:true, ref:a.run});
+  rows.push({nm:'Waktu produktif penuh', sm:'Output 1st ÷ '+NF0.format(th)+' kg/jam = OEE '+fp1(o.O), l:0, w:good, col:'var(--oO)', v:good, tot:true});
+  $('#lossSub').textContent = `${lab} · dalam jam setara kapasitas ${NF0.format(th)} kg/jam`;
+  $('#lossBox').innerHTML = rows.map(r=>`<div class="row ${r.tot?'tot':''}"><div class="nm">${r.nm}<small>${r.sm}</small></div><div class="track"><div class="seg2" style="left:${pct(Math.min(r.l,W))}%;width:${Math.max(r.w>0?0.6:0,pct(Math.min(r.w,W-Math.min(r.l,W))))}%;background:${r.col}"></div></div><div class="val">${r.neg?'−':''}${fh(r.v)} j<small>${r.ref? fp(r.v/r.ref)+' dari '+fh(r.ref)+' j' : (sched? fp(r.v/sched)+' waktu terjadwal':'')}</small></div></div>`).join('');
+}
+function renderOeeTable(){
+  const ps = scopePOs(); const tot = agg('', ps); const ot = oee(tot);
+  const row = p => { const a=agg('',[p]); const o=oee(a); return `<tr data-po="${p.po}" class="${S.sel===p.po?'sel':''}"><td class="l">${esc(cycName(p.cycle||'-'))}</td><td class="l"><b>${p.po}</b></td><td class="l">${dlab(p.okp)}</td><td>${fh(o.ppt)}</td><td>${fh(a.run)}</td><td>${fp1(o.A)}</td><td>${NF0.format(a.kgTot)}</td><td>${NF0.format(theoKg(a.run))}</td><td>${o.P>1?'<span title="Performance di atas 100%: Uptime (jam) kemungkinan belum lengkap">⚠ </span>':''}${fp1(o.P)}</td><td>${NF0.format(a.kg1)}</td><td>${NF0.format(a.kgTot-a.kg1)}</td><td>${fp1(o.Q)}</td><td><b>${fp1(o.O)}</b></td></tr>`; };
+  $('#oeeTbl').innerHTML = `<thead><tr><th class="l">Cycle</th><th class="l">No PO</th><th class="l">OKP</th><th>${S.basis==='tot'?'Total waktu':'Waktu terencana'} (j)</th><th>Uptime (j)</th><th>Availability</th><th>Total output (kg)</th><th>Teoritis (kg)</th><th>Performance</th><th>1st (kg)</th><th>Reject (kg)</th><th>Quality</th><th>OEE</th></tr></thead>
+    <tbody>${ps.map(row).join('')}</tbody>
+    <tfoot><tr><td class="l" colspan="3">Total · ${esc(scopeLabel())}</td><td>${fh(ot.ppt)}</td><td>${fh(tot.run)}</td><td>${fp1(ot.A)}</td><td>${NF0.format(tot.kgTot)}</td><td>${NF0.format(theoKg(tot.run))}</td><td>${fp1(ot.P)}</td><td>${NF0.format(tot.kg1)}</td><td>${NF0.format(tot.kgTot-tot.kg1)}</td><td>${fp1(ot.Q)}</td><td>${fp1(ot.O)}</td></tr></tfoot>`;
+  $('#oeeTbl').querySelectorAll('tbody tr').forEach(tr=>tr.addEventListener('click',()=>{ const po=tr.dataset.po; S.oview='po'; S.sel = S.sel===po?null:po; renderAll(); }));
+}
+function renderOeeControls(){
+  $('#oeeViewSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===S.oview));
+  $('#availSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.b===S.basis));
+  $('#oeeSelNote').innerHTML = S.sel && S.oview==='po' ? `Dipilih: <b>PO ${S.sel}</b> · <a id="clrSel2">hapus pilihan</a>` : '';
+  const c = $('#clrSel2'); if (c) c.onclick = ()=>{ S.sel=null; renderAll(); };
+}
+function renderOEE(){ renderOeeControls(); renderOeeKPIs(); renderOeeChart(); renderLoss(); renderOeeTable(); }
+function showPage(pg){
+  S.page = pg; try{ localStorage.setItem('nugget_page', pg); }catch(e){}
+  document.querySelectorAll('nav.pages button').forEach(b=>b.classList.toggle('on', b.dataset.page===pg));
+  $('#page-uptime').hidden = pg!=='uptime'; $('#page-oee').hidden = pg!=='oee';
+  renderAll();
+}
+document.querySelectorAll('nav.pages button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+$('#oeeViewSeg').querySelectorAll('button').forEach(b=>b.onclick=()=>{ S.oview=b.dataset.v; if (S.oview!=='po') S.sel=null; renderAll(); });
+$('#availSeg').querySelectorAll('button').forEach(b=>b.onclick=()=>{ S.basis=b.dataset.b; renderAll(); });
+$('#oeeTarget').oninput = e => { const v=parseFloat(e.target.value); S.target = isFinite(v)&&v>0 ? v : NaN; if (M){ renderOeeKPIs(); renderOeeChart(); } };
+try{ const pg = localStorage.getItem('nugget_page'); if (pg==='oee'){ S.page='oee'; document.querySelectorAll('nav.pages button').forEach(b=>b.classList.toggle('on', b.dataset.page==='oee')); $('#page-uptime').hidden=true; $('#page-oee').hidden=false; } }catch(e){}
+
+/* ============ INIT ============ */
+$('#viewSeg').querySelectorAll('button').forEach(b=>b.onclick=()=>{ S.view=b.dataset.v; if (S.view!=='po') S.sel=null; renderAll(); });
+$('#srcLink').href = `https://docs.google.com/spreadsheets/d/${CFG.sheetId}/edit`;
+let rt; addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(()=>{ if(!M) return; S.page==='oee'?renderOeeChart():renderChart(); },120); });
+async function load(){
+  $('#loadedAt').textContent = 'Memuat data…';
+  try{
+    const [ss, dt, ab, teco] = await Promise.all([loadTab('ss'), loadTab('dt'), loadTab('ab'), loadTab('teco')]);
+    M = build(ss, dt, ab, teco);
+    const now = new Date(); $('#loadedAt').textContent = `Data dimuat ${pad(now.getHours())}:${pad(now.getMinutes())} · ${M.pos.length} PO · ${M.events.length} event DT`;
+    renderAll();
+  }catch(err){
+    console.error(err);
+    $('#loadedAt').innerHTML = '<span class="err">Gagal memuat</span>';
+    $('#chartBox').innerHTML = `<div class="empty err">${esc(err.message)}</div>`;
+  }
+}
+$('#refresh').onclick = load;
+$('#okpFrom').onchange = e => { S.okpFrom = e.target.value; if (S.okpTo && S.okpFrom && S.okpFrom > S.okpTo) S.okpTo = S.okpFrom; S.sel=null; renderAll(); };
+$('#okpTo').onchange = e => { S.okpTo = e.target.value; if (S.okpFrom && S.okpTo && S.okpTo < S.okpFrom) S.okpFrom = S.okpTo; S.sel=null; renderAll(); };
+$('#okpReset').onclick = () => { S.okpFrom=''; S.okpTo=''; renderAll(); };
+for (const [id,k] of [['capCavity','cavity'],['capCycle','cycle'],['capForming','forming'],['capPickup','pickup'],['capYield','yield']])
+  $('#'+id).oninput = e => { const v = parseFloat(e.target.value); if (!(v>=0) || (k!=='pickup' && !(v>0))) return; S.cap[k]=v; S.theo = capCalc().nett;
+    try{ localStorage.setItem('nugget_cap', JSON.stringify(S.cap)); }catch(_){}
+    if (M) renderAll(); };
+
+/* ============ DOWNLOAD PNG ============ */
+let h2cP = null;
+function loadH2C(){
+  if (window.html2canvas) return Promise.resolve(window.html2canvas);
+  if (!h2cP) h2cP = new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'; sc.onload=()=>res(window.html2canvas); sc.onerror=()=>{h2cP=null;rej(new Error('html2canvas gagal dimuat'));}; document.head.appendChild(sc); });
+  return h2cP;
+}
+function fileName(base){
+  const vw = base.startsWith('OEE') ? S.oview : S.view; const parts = [base, vw==='po'?'PerPO':vw==='cycle'?'PerCycle':'PerHari', allCyc()?'Semua':S.cycs.map(c=>c.replace(/\s+/g,'')).join('-')];
+  if (S.okpFrom || S.okpTo) parts.push('OKP_'+(S.okpFrom||'awal')+'_sd_'+(S.okpTo||'akhir'));
+  if (S.sel) parts.push('PO'+S.sel);
+  const d=new Date(); parts.push(d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate()));
+  return parts.join('_')+'.png';
+}
+function saveCanvas(cv, name){
+  return new Promise(res => cv.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500); res(); }, 'image/png'));
+}
+async function svgFallback(card, name){ // kalau html2canvas tidak bisa dimuat: simpan grafik saja
+  const svg = card.querySelector('svg'); if (!svg) throw new Error('Tidak ada grafik di kartu ini (perlu koneksi internet untuk html2canvas)');
+  const W = +svg.getAttribute('width'), H = +svg.getAttribute('height'), sc = 2;
+  const xml = new XMLSerializer().serializeToString(svg);
+  const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);
+  await img.decode();
+  const cv = document.createElement('canvas'); cv.width=W*sc; cv.height=(H+40)*sc; const cx=cv.getContext('2d'); cx.scale(sc,sc);
+  cx.fillStyle=getComputedStyle(card).backgroundColor; cx.fillRect(0,0,W,H+40); cx.fillStyle=getComputedStyle(document.body).color; cx.font='700 15px sans-serif';
+  cx.fillText('RECAP UPTIME · '+scopeLabel()+(S.sel?' · PO '+S.sel:''), 8, 22); cx.drawImage(img,0,40,W,H);
+  await saveCanvas(cv, name);
+}
+document.addEventListener('click', async ev => {
+  const btn = ev.target.closest('.dl'); if (!btn || !M) return;
+  const card = document.getElementById(btn.dataset.png); const name = fileName(btn.dataset.name);
+  const old = btn.textContent; btn.disabled = true; btn.textContent = 'Menyiapkan…';
+  document.body.classList.add('exporting');
+  try{
+    const h2c = await loadH2C();
+    const cv = await h2c(card, { scale:2, backgroundColor: getComputedStyle(document.body).backgroundColor, logging:false,
+      onclone: doc => { doc.body.classList.add('exporting'); const c = doc.getElementById(card.id); if (c){ c.style.boxShadow='none'; c.querySelectorAll('.tblWrap').forEach(t=>{t.style.overflow='visible';t.style.maxHeight='none';}); } } });
+    await saveCanvas(cv, name);
+  }catch(e){
+    console.warn(e);
+    try{ await svgFallback(card, name); }catch(e2){ alert('Download PNG gagal: '+e2.message); }
+  }finally{ document.body.classList.remove('exporting'); btn.disabled=false; btn.textContent=old; }
+});
+
+/* ============ PASSWORD ============ */
+const GATE_PW = 'japfa';
+let gateOpened = false;
+function openDashboard(){ document.body.classList.remove('locked'); if (!gateOpened){ gateOpened = true; load(); } }
+try{ if (sessionStorage.getItem('nugget_auth')==='1') openDashboard(); }catch(e){}
+$('#gateForm').addEventListener('submit', ev => {
+  ev.preventDefault();
+  const box = $('#gateForm'), pw = $('#gatePw');
+  if (pw.value === GATE_PW){ try{ sessionStorage.setItem('nugget_auth','1'); }catch(e){} $('#gateErr').textContent=''; openDashboard(); }
+  else { $('#gateErr').textContent = 'Password salah'; pw.value=''; pw.focus(); box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake'); }
+});
+</script>
+</body>
+</html>
